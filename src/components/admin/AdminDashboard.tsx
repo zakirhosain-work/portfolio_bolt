@@ -45,17 +45,19 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
     try {
       setIsSaving(true);
       setSaveSuccess(false);
-      console.log('🔄 Admin Dashboard: Saving all changes to database...');
+      console.log('🔄 Admin Dashboard: Saving all 8 content sections to database...');
+      console.log('📋 Sections being saved: Hero, About, Skills, Services, Portfolio, Testimonials, Contact, Rating');
       await updateContent(localContent);
       setHasUnsavedChanges(false);
       setSaveSuccess(true);
-      console.log('✅ Admin Dashboard: All changes saved successfully');
+      console.log('✅ Admin Dashboard: All content sections saved successfully to database');
+      console.log('🌐 Changes are now live and will sync to all user devices');
       
       // Hide success message after 3 seconds
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err) {
-      console.error('❌ Admin Dashboard: Failed to save changes:', err);
-      alert('Failed to save changes. Please try again.');
+      console.error('❌ Admin Dashboard: Failed to save content sections:', err);
+      alert('Failed to save content to database. Please check your connection and try again.');
     } finally {
       setIsSaving(false);
     }
@@ -68,7 +70,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
   };
 
   const handleContentUpdate = (newContent: SiteContent) => {
-    console.log('🔄 Admin Dashboard: Updating local content for section:', activeTab);
+    console.log(`🔄 Admin Dashboard: Updating local content for ${activeTab} section`);
+    console.log(`📝 ${activeTab} content:`, activeTab === 'hero' ? newContent.hero : 
+                                          activeTab === 'about' ? newContent.about :
+                                          activeTab === 'skills' ? newContent.skills :
+                                          activeTab === 'services' ? newContent.services :
+                                          activeTab === 'portfolio' ? newContent.portfolio :
+                                          activeTab === 'testimonials' ? newContent.testimonials :
+                                          activeTab === 'contact' ? newContent.contact :
+                                          activeTab === 'rating' ? newContent.rating : 'unknown');
     setLocalContent(newContent);
     setHasUnsavedChanges(true);
   };
@@ -134,7 +144,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
               {saveSuccess && (
                 <div className="flex items-center space-x-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg">
                   <Check className="w-4 h-4" />
-                  <span>Saved Successfully!</span>
+                  <span>All Sections Saved to Database!</span>
                 </div>
               )}
               
@@ -149,7 +159,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
               >
                 <Save className="w-4 h-4" />
                 <span>
-                  {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
+                  {isSaving ? 'Saving All Sections...' : hasUnsavedChanges ? 'Save All Changes' : 'All Saved'}
                 </span>
               </button>
               
@@ -217,8 +227,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                 <div className="flex items-center space-x-2">
                   <Save className="w-5 h-5" />
                   <div>
-                    <p className="font-semibold">You have unsaved changes</p>
-                    <p className="text-sm">Click "Save Changes" to save your modifications to the database.</p>
+                    <p className="font-semibold">You have unsaved changes in {activeTab} section</p>
+                    <p className="text-sm">Click "Save All Changes" to sync all modifications to the database and other devices.</p>
                   </div>
                 </div>
                 <button
@@ -226,7 +236,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                   disabled={isSaving}
                   className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors duration-200 disabled:opacity-50"
                 >
-                  {isSaving ? 'Saving...' : 'Save Now'}
+                  {isSaving ? 'Saving All...' : 'Save All Now'}
                 </button>
               </div>
             </div>

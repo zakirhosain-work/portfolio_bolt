@@ -84,7 +84,8 @@ export const useSupabaseContent = () => {
   const updateContent = async (newContent: SiteContent) => {
     try {
       setError(null);
-      console.log('💾 Starting to save content to database...');
+      console.log('💾 Starting to save all content sections to database...');
+      console.log('📊 Content to save:', newContent);
 
       // Update each section in the database
       const updates = [
@@ -103,7 +104,10 @@ export const useSupabaseContent = () => {
         
         const { error: updateError } = await supabase
           .from('site_content')
-          .upsert(update, { onConflict: 'content_key' });
+          .upsert(update, { 
+            onConflict: 'content_key',
+            ignoreDuplicates: false 
+          });
 
         if (updateError) {
           console.error(`Error updating ${update.content_key}:`, updateError);
@@ -118,7 +122,8 @@ export const useSupabaseContent = () => {
       
       // Also save to localStorage as backup
       localStorage.setItem('siteContent', JSON.stringify(newContent));
-      console.log('🎉 All content saved successfully to database and localStorage');
+      console.log('🎉 All 8 content sections saved successfully to database and localStorage');
+      console.log('🔄 Changes will now sync to all devices accessing the website');
       
     } catch (err) {
       console.error('Error updating content:', err);

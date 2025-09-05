@@ -71,7 +71,8 @@ export const useContent = () => {
 
   // Return appropriate hook based on availability
   if (useLocalStorage || supabaseHook.error) {
-    console.log('📱 Using localStorage mode');
+    console.log('📱 Using localStorage mode - changes will NOT sync across devices');
+    console.log('⚠️ To enable cross-device sync, please set up Supabase connection');
     return {
       content: localContent,
       updateContent: updateLocalContent,
@@ -81,6 +82,6 @@ export const useContent = () => {
     };
   };
 
-  console.log('🗄️ Using Supabase database mode');
+  console.log('🗄️ Using Supabase database mode - changes will sync across all devices');
   return supabaseHook;
 };
