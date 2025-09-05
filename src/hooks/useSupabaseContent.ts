@@ -13,6 +13,15 @@ export const useSupabaseContent = () => {
     try {
       setLoading(true);
       setError(null);
+      
+      // Check if Supabase is available
+      if (!supabase) {
+        console.log('📱 Supabase not configured, using default content');
+        setContent(defaultContent);
+        setLoading(false);
+        return;
+      }
+      
       console.log('🔄 Loading content from Supabase...');
 
       const { data, error: supabaseError } = await supabase
@@ -84,6 +93,15 @@ export const useSupabaseContent = () => {
   const updateContent = async (newContent: SiteContent) => {
     try {
       setError(null);
+      
+      // Check if Supabase is available
+      if (!supabase) {
+        console.log('📱 Supabase not configured, saving to localStorage only');
+        setContent(newContent);
+        localStorage.setItem('siteContent', JSON.stringify(newContent));
+        return;
+      }
+      
       console.log('💾 Starting to save all content sections to database...');
       console.log('📊 Content to save:', newContent);
 
@@ -141,6 +159,14 @@ export const useSupabaseContent = () => {
   const resetContent = async () => {
     try {
       console.log('🔄 Resetting content to defaults...');
+      
+      if (!supabase) {
+        console.log('📱 Supabase not configured, resetting localStorage only');
+        setContent(defaultContent);
+        localStorage.removeItem('siteContent');
+        return;
+      }
+      
       await updateContent(defaultContent);
       localStorage.removeItem('siteContent');
       console.log('✅ Content reset successfully');
